@@ -21,7 +21,6 @@ from models import Item, Feed
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from forms import FeedForm
 from django.conf import settings
-import opml
 from django.db.models import Q
 
 def _main_view(request, iall, template_vars={}):
@@ -98,6 +97,7 @@ def bulk_archive(request):
     return HttpResponse('OK')
 
 def opml_import(request, url):
+    import opml
     try:
         o = opml.parse(url)
     except:
