@@ -27,6 +27,7 @@ from django.conf import settings
 from f33dme.models import Item, Feed
 from feedparser import parse
 from datetime import datetime
+from itertools import imap
 
 def fetchFeed(feed):
     counter = 0
@@ -45,17 +46,11 @@ def fetchFeed(feed):
         try:
             c = unicode(''.join([x.value for x in item.content]))
         except:
-            if item.has_key('media_text'):
-                c = unicode(item['media_text'])
-            elif item.has_key('summary'):
-                c = unicode(item['summary'])
-            elif item.has_key('description'):
-                c = unicode(item['description'])
-            elif item.has_key('media:description'):
-                c = unicode(item['media:description'])
-            else:
-                #print '[!] no content found in %s(%s) - %s' % (feed.name, feed.url, unicode(item['title']))
-                c = u'No content found, plz check the feed and fix me =)'
+            c = u'No content found, plz check the feed and fix me =)'
+            for key in ['media_text', 'summary', 'description', 'media:description']:
+                if item.has_key(key):
+                    c = unicode(item[key])
+                    break
         t = unicode(item['title'])
         try:
            u = item['links'][0]['href']
@@ -73,7 +68,5 @@ def fetchFeed(feed):
     return counter
 
 if __name__ == '__main__':
-    counter = 0
-    for feed in Feed.objects.all():
-        counter += fetchFeed(feed)
+    counter = sum(imap(fetchFeed, Feed.objects.all()))
     print '[!] %d item added' % counter
