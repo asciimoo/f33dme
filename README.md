@@ -27,6 +27,8 @@ DEPENDENCIES:
 - python feedparser - http://www.feedparser.org/
 - jquery - http://jquery.com/
 - jquery infinite scroll - http://www.infinite-scroll.com/infinite-scroll-jquery-plugin/ ; https://github.com/paulirish/infinite-scroll
+- python-utidylib
+- lxml, beautifulsoup
 
 INSTALL:
 --------
