@@ -154,7 +154,7 @@ $(document).ready(function(){
 <table>
     <tr><th>Name</th><th>Items</th></tr>
     {% for feed in feeds %}
-    <tr><td><a href="{{ feed.url }}" title="show only this feed">{{ feed.name }}</a></td><td>{{ feed.item_number }}({{ feed.unread_item_number}})</td></tr>
+    <tr><td><a href="{% root_url%}/feed/{{ feed.id }}" title="show only this feed">{{ feed.name }}</a></td><td>{{ feed.item_number }}({{ feed.unread_item_number}})</td></tr>
     {% endfor %}
 </table>
 {% endif %}
