@@ -82,6 +82,10 @@ $(document).ready(function(){
             href,
              {} ,
             function(data){ 
+                if (data.indexOf("OK") == -1) {
+                    alert("Failed to archive item: " + data);
+                    return;
+                }
                 div.hide('slow');
              } 
          );  
