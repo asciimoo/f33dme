@@ -73,11 +73,8 @@ def remove_feed(request):
     return HttpResponse('1')
 
 def archive(request, item_id):
-    item = Item.objects.get(id=item_id)
-    if not item:
+    if Item.objects.filter(id=item_id).update(archived=True) != 1:
         return HttpResponse('No item found')
-    item.archived = True
-    item.save()
     return HttpResponse('OK')
 
 def feeds(request):
