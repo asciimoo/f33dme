@@ -95,14 +95,10 @@ def bulk_archive(request):
 
 def opml_import(request, url):
     import opml
+    from opml_import import import_outline_element
     try:
         o = opml.parse(url)
     except:
         return HttpResponse('Cannot parse opml file %s' % url)
-    for f in o:
-        new = Feed.objects.create(url = f.xmlUrl,
-                                  #tags = self.cleaned_data['tags'],
-                                  name = f.title,
-                                  )
-        new.save()
+    import_outline_element(o)
     return HttpResponse('OK')
