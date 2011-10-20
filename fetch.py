@@ -28,11 +28,29 @@ from f33dme.models import Item, Feed
 from feedparser import parse
 from datetime import datetime
 from itertools import imap
+from urllib2 import urlopen
+from hashlib import sha1
+import re
 from lxml.html.clean import Cleaner
 from urlparse import urljoin, urlparse, urlunparse
 from itertools import ifilterfalse, imap
 import urllib
 import tidy
+
+
+bloghu_re = re.compile(r'^http://[a-zA-Z0-9]+\.blog\.hu/')
+bloghu_gen_re = re.compile(r'<generator>[^<]+</generator>')
+empty_feed = dict(entries=[])
+
+def bloghu_parse(feed):
+    content = urlopen(feed.url).read()
+    content = bloghu_gen_re.sub('', content, 1)
+    hashval = 'bloghu_' + sha1(content).hexdigest()
+    if hashval == feed.etag:
+        return empty_feed
+    else:
+        feed.etag = hashval
+        return parse(content)
 
 cleaner = Cleaner(host_whitelist=['www.youtube.com'])
 
@@ -55,7 +73,10 @@ def clean(txt):
 def fetchFeed(feed):
     counter = 0
     modified = feed.modified.timetuple() if feed.modified else None
-    f = parse(feed.url, etag=feed.etag, modified=modified)
+    if bloghu_re.match(feed.url):
+        f = bloghu_parse(feed)
+    else:
+        f = parse(feed.url, etag=feed.etag, modified=modified)
     if not f:
         print '[!] cannot parse %s - %s' % (feed.name, feed.url)
         return
