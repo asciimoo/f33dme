@@ -23,6 +23,7 @@ div#calendar { float: right; margin-right: 40px; width: 60%; }
 
 .archived { background: #222222; color: grey; }
 .item { font-family: monospace; }
+.archived a.archive { display: none; }
 
 a { color: #FF0066; text-decoration: none; }
 a:hover { text-decoration: underline; }
