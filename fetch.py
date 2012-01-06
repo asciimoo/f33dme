@@ -52,6 +52,12 @@ def clean(txt):
                                                 'doctype' : "strict",
                                                 'wrap' : 0})),'utf8')
 
+def try_clean(content):
+    try:
+        return cleaner.clean_html(clean(unicode(content)))
+    except:
+        return content
+
 def fetchFeed(feed):
     counter = 0
     modified = feed.modified.timetuple() if feed.modified else None
@@ -81,7 +87,7 @@ def fetchFeed(feed):
             c = u'No content found, plz check the feed and fix me =)'
             for key in ['media_text', 'summary', 'description', 'media:description']:
                 if item.has_key(key):
-                    c = cleaner.clean_html(clean(unicode(item[key])))
+                    c = try_clean(item[key])
                     break
         t = unicode(item.get('title',''))
         try:
